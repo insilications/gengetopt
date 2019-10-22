@@ -6,7 +6,7 @@
 #
 Name     : gengetopt
 Version  : 2.23
-Release  : 1
+Release  : 2
 URL      : https://ftp.gnu.org/gnu/gengetopt/gengetopt-2.23.tar.xz
 Source0  : https://ftp.gnu.org/gnu/gengetopt/gengetopt-2.23.tar.xz
 Source1 : https://ftp.gnu.org/gnu/gengetopt/gengetopt-2.23.tar.xz.sig
@@ -79,7 +79,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1571708349
+export SOURCE_DATE_EPOCH=1571709118
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -99,10 +99,11 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1571708349
+export SOURCE_DATE_EPOCH=1571709118
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gengetopt
 cp COPYING %{buildroot}/usr/share/package-licenses/gengetopt/COPYING
+cp LICENSE %{buildroot}/usr/share/package-licenses/gengetopt/LICENSE
 %make_install
 
 %files
@@ -126,6 +127,7 @@ cp COPYING %{buildroot}/usr/share/package-licenses/gengetopt/COPYING
 %files license
 %defattr(0644,root,root,0755)
 /usr/share/package-licenses/gengetopt/COPYING
+/usr/share/package-licenses/gengetopt/LICENSE
 
 %files man
 %defattr(0644,root,root,0755)
