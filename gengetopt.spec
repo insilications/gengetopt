@@ -4,24 +4,28 @@
 #
 # Source0 file verified with key 0x8533F94B6379E538 (wolf@wolfsden.cz)
 #
+%define keepstatic 1
 Name     : gengetopt
 Version  : 2.23
-Release  : 2
+Release  : 3
 URL      : https://ftp.gnu.org/gnu/gengetopt/gengetopt-2.23.tar.xz
 Source0  : https://ftp.gnu.org/gnu/gengetopt/gengetopt-2.23.tar.xz
-Source1 : https://ftp.gnu.org/gnu/gengetopt/gengetopt-2.23.tar.xz.sig
+Source1  : https://ftp.gnu.org/gnu/gengetopt/gengetopt-2.23.tar.xz.sig
 Summary  : No detailed summary available
 Group    : Development/Tools
-License  : GPL-3.0
+License  : BSD-2-Clause
 Requires: gengetopt-bin = %{version}-%{release}
 Requires: gengetopt-data = %{version}-%{release}
-Requires: gengetopt-license = %{version}-%{release}
+Requires: gengetopt-info = %{version}-%{release}
 Requires: gengetopt-man = %{version}-%{release}
 BuildRequires : bison
 BuildRequires : flex
 BuildRequires : help2man
 BuildRequires : texinfo
 BuildRequires : valgrind
+# Suppress stripping binaries
+%define __strip /bin/true
+%define debug_package %{nil}
 
 %description
 GNU Gengetopt
@@ -32,7 +36,6 @@ parse the command line options, to validate them and fills a /struct/ .
 Summary: bin components for the gengetopt package.
 Group: Binaries
 Requires: gengetopt-data = %{version}-%{release}
-Requires: gengetopt-license = %{version}-%{release}
 
 %description bin
 bin components for the gengetopt package.
@@ -50,17 +53,18 @@ data components for the gengetopt package.
 Summary: doc components for the gengetopt package.
 Group: Documentation
 Requires: gengetopt-man = %{version}-%{release}
+Requires: gengetopt-info = %{version}-%{release}
 
 %description doc
 doc components for the gengetopt package.
 
 
-%package license
-Summary: license components for the gengetopt package.
+%package info
+Summary: info components for the gengetopt package.
 Group: Default
 
-%description license
-license components for the gengetopt package.
+%description info
+info components for the gengetopt package.
 
 
 %package man
@@ -73,37 +77,23 @@ man components for the gengetopt package.
 
 %prep
 %setup -q -n gengetopt-2.23
+cd %{_builddir}/gengetopt-2.23
 
 %build
-export http_proxy=http://127.0.0.1:9/
-export https_proxy=http://127.0.0.1:9/
-export no_proxy=localhost,127.0.0.1,0.0.0.0
+unset http_proxy
+unset https_proxy
+unset no_proxy
+export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1571709118
+export SOURCE_DATE_EPOCH=1602701505
 export GCC_IGNORE_WERROR=1
-export AR=gcc-ar
-export RANLIB=gcc-ranlib
-export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
-%configure --disable-static
+%reconfigure --enable-shared --enable-static
 make  %{?_smp_mflags}
 
-%check
-export LANG=C.UTF-8
-export http_proxy=http://127.0.0.1:9/
-export https_proxy=http://127.0.0.1:9/
-export no_proxy=localhost,127.0.0.1,0.0.0.0
-make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1571709118
+export SOURCE_DATE_EPOCH=1602701505
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/package-licenses/gengetopt
-cp COPYING %{buildroot}/usr/share/package-licenses/gengetopt/COPYING
-cp LICENSE %{buildroot}/usr/share/package-licenses/gengetopt/LICENSE
 %make_install
 
 %files
@@ -122,12 +112,11 @@ cp LICENSE %{buildroot}/usr/share/package-licenses/gengetopt/LICENSE
 %files doc
 %defattr(0644,root,root,0755)
 %doc /usr/share/doc/gengetopt/*
-%doc /usr/share/info/*
 
-%files license
+%files info
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/gengetopt/COPYING
-/usr/share/package-licenses/gengetopt/LICENSE
+/usr/share/info/gengetopt.info
+/usr/share/info/index.info
 
 %files man
 %defattr(0644,root,root,0755)
